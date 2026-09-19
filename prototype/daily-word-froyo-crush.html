@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yogurtland Daily Word</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --berry-900:#3B0620; --berry-800:#5C0B31; --berry-700:#8A0B44;
+  --magenta:#C10F5E; --magenta-lt:#E8437F; --sorbet:#FF8FB8;
+  --cream:#FFF4EA;
+  --lime:#A8D84B; --lime-dk:#6FA31C;
+  --gold:#FFC93C; --gold-dk:#E09300;
+  --display:'Baloo 2','Poppins',system-ui,sans-serif;
+  --ui:'Poppins',system-ui,sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; height:100%}
+body{
+  font-family:var(--ui); color:#fff;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #7A0E3F 0%, transparent 60%),
+    radial-gradient(900px 600px at 90% 100%, #2A0417 0%, transparent 55%),
+    #240413;
+  display:flex; align-items:center; justify-content:center;
+  padding:18px; min-height:100%; overflow:hidden;
+}
+button{font-family:inherit}
+
+/* ---------- phone ---------- */
+.phone{
+  position:relative; width:390px; height:800px; border-radius:44px; overflow:hidden; flex:none;
+  background:var(--cream);
+  box-shadow:0 0 0 10px #1B0310, 0 0 0 12px rgba(255,255,255,.09), 0 40px 80px rgba(0,0,0,.6);
+}
+.notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:26px;
+       background:#1B0310; border-radius:0 0 16px 16px; z-index:60}
+#app{position:absolute; inset:0}
+@media(max-width:430px){
+  body{padding:0; background:#1B0310}
+  .phone{width:100vw; height:100dvh; border-radius:0; box-shadow:none}
+  .notch{display:none}
+  .screen{padding-top:calc(18px + env(safe-area-inset-top)) !important;
+          padding-bottom:calc(18px + env(safe-area-inset-bottom)) !important}
+}
+
+/* ---------- screens ---------- */
+.screen{position:absolute; inset:0; display:flex; flex-direction:column; padding:48px 18px 22px;
+        background:linear-gradient(#FFF4EA,#FFE2EE); color:var(--berry-700)}
+.screen.enter{animation:screenIn .28s ease-out}
+@keyframes screenIn{from{opacity:0; transform:scale(.98)}to{opacity:1; transform:none}}
+.scroll{flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; scrollbar-width:none;
+        margin:0 -14px; padding:0 14px 14px} /* room so overflow clipping doesn't cut off drop shadows */
+.scroll::-webkit-scrollbar{display:none}
+.scroll>*{flex-shrink:0}
+.dark{background:
+  radial-gradient(90% 45% at 50% 0%, #B01057 0%, transparent 60%),
+  radial-gradient(70% 40% at 20% 100%, #7A0637 0%, transparent 60%),
+  linear-gradient(var(--berry-800), var(--berry-900))}
+
+/* ---------- shared bits ---------- */
+.logo{font-family:var(--display); font-weight:800; color:var(--magenta); letter-spacing:-.5px; line-height:.9; text-align:center}
+.logo small{display:block; font-size:.34em; color:var(--lime-dk); font-weight:700; letter-spacing:1px}
+.logo.lt{color:#fff}
+.logo.lt small{color:var(--lime)}
+
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex:none}
+.back{width:34px; height:34px; border-radius:12px; border:none; background:#fff; color:var(--magenta);
+      font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 3px 0 rgba(59,6,32,.18)}
+.back:active{transform:translateY(2px); box-shadow:0 1px 0 rgba(59,6,32,.18)}
+.sp{width:34px; height:34px}
+
+.btn{
+  font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:.6px;
+  color:#fff; border:none; cursor:pointer; padding:14px 20px 17px; border-radius:20px; width:100%;
+  background:linear-gradient(#E8437F, var(--magenta) 55%, #A00A4E);
+  box-shadow:0 6px 0 #7A0637, 0 12px 20px rgba(122,6,55,.45), inset 0 2px 0 rgba(255,255,255,.45);
+  transition:transform .08s, box-shadow .08s; text-shadow:0 2px 0 rgba(122,6,55,.5);
+}
+.btn:active{transform:translateY(5px); box-shadow:0 1px 0 #7A0637, 0 4px 10px rgba(122,6,55,.4), inset 0 2px 0 rgba(255,255,255,.35)}
+.btn.lime{background:linear-gradient(#C8ED7E, var(--lime) 55%, #6FA31C); color:#2C4A00; text-shadow:0 2px 0 rgba(255,255,255,.4);
+          box-shadow:0 6px 0 #4E7511, 0 12px 20px rgba(78,117,17,.4), inset 0 2px 0 rgba(255,255,255,.55)}
+.btn.lime:active{box-shadow:0 1px 0 #4E7511, 0 4px 10px rgba(78,117,17,.4), inset 0 2px 0 rgba(255,255,255,.45)}
+.btn.white{background:#fff; color:var(--magenta); font-size:16px; text-shadow:none; padding:12px 20px 14px;
+           box-shadow:0 5px 0 rgba(59,6,32,.18), 0 10px 18px rgba(59,6,32,.12)}
+.btn.white:active{box-shadow:0 1px 0 rgba(59,6,32,.18)}
+.btn+.btn{margin-top:14px}
+.link{display:block; width:100%; margin-top:14px; background:none; border:none; cursor:pointer;
+      font-size:12px; font-weight:800; letter-spacing:.3px; color:var(--magenta)}
+
+.pill{background:#fff; border-radius:18px; padding:10px 12px; text-align:center;
+      box-shadow:0 4px 0 rgba(59,6,32,.13), inset 0 0 0 2px rgba(193,15,94,.1)}
+.pill .k{font-size:9px; font-weight:800; letter-spacing:1.2px; color:#B9829B; text-transform:uppercase}
+.pill .v{font-family:var(--display); font-size:26px; font-weight:800; color:var(--berry-700); line-height:1.05}
+.eyebrow{font-size:10px; font-weight:800; letter-spacing:2px; color:#C08FA4; text-transform:uppercase}
+
+/* ---------- tiles ---------- */
+.row{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; min-height:0}
+.row.sq .tile{aspect-ratio:1}
+.tile{
+  border-radius:14px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--display); font-weight:800; font-size:30px; line-height:1; padding-top:3px;
+  background:#fff; color:var(--berry-700);
+  border:2px solid rgba(193,15,94,.16); box-shadow:0 3px 0 rgba(59,6,32,.1);
+}
+.tile.cursor{border-color:var(--magenta-lt); box-shadow:0 0 0 3px rgba(193,15,94,.14), 0 3px 0 rgba(59,6,32,.1); animation:tpop .14s ease-out}
+@keyframes tpop{0%{transform:scale(.88)}100%{transform:scale(1)}}
+.tile.correct{background:linear-gradient(#C8ED7E, var(--lime) 55%, var(--lime-dk)); border-color:transparent; color:#2C4A00;
+              box-shadow:0 4px 0 #4E7511, inset 0 2px 0 rgba(255,255,255,.55)}
+.tile.present{background:linear-gradient(#FFDD7A, var(--gold) 55%, var(--gold-dk)); border-color:transparent; color:#5A3200;
+              box-shadow:0 4px 0 #B87400, inset 0 2px 0 rgba(255,255,255,.6)}
+.tile.absent{background:linear-gradient(#C9B3C0, #A88A9A); border-color:transparent; color:#fff;
+             box-shadow:0 4px 0 #7E6172, inset 0 2px 0 rgba(255,255,255,.35)}
+.tile.blank{background:#fff}
+
+/* ---------- 01 splash ---------- */
+.s-splash{background:radial-gradient(120% 80% at 50% 15%, #FFFFFF 0%, #FFE9F1 45%, #FFC9DE 100%);
+          align-items:center; justify-content:center; text-align:center; cursor:pointer; overflow:hidden}
+.sprinkles{position:absolute; inset:0; pointer-events:none}
+.sprinkle{position:absolute; top:0; border-radius:99px; opacity:.9; animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-40px) rotate(0)}100%{transform:translateY(var(--fall,860px)) rotate(540deg)}}
+.splash-title{font-family:var(--display); font-weight:800; line-height:.86; position:relative; z-index:2; margin:16px 0 0}
+.splash-title .a{display:block; font-size:44px; color:var(--lime-dk); letter-spacing:1px}
+.splash-title .b{display:block; font-size:76px; color:var(--magenta);
+                 text-shadow:0 6px 0 #fff, 0 10px 0 rgba(122,6,55,.25), 0 20px 30px rgba(122,6,55,.3)}
+.swirl{width:150px; height:150px; margin:10px auto 0; position:relative; z-index:2;
+       filter:drop-shadow(0 14px 18px rgba(122,6,55,.28)); animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+.tapstart{position:relative; z-index:2; margin-top:26px; font-family:var(--display); font-weight:700; font-size:17px;
+          color:var(--berry-700); letter-spacing:2px; animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- 02 home ---------- */
+.home-title{font-family:var(--display); font-weight:800; line-height:.86; text-align:center; margin:2px 0 0}
+.home-title .a{display:block; font-size:30px; color:var(--lime-dk); letter-spacing:1px}
+.home-title .b{display:block; font-size:58px; color:var(--magenta);
+               text-shadow:0 5px 0 #fff, 0 8px 0 rgba(122,6,55,.22), 0 16px 24px rgba(122,6,55,.25)}
+.day{text-align:center; margin-top:18px}
+.sub{font-size:12px; font-weight:600; color:#8C5A72; text-align:center; margin:6px 0 0}
+.hero-card{margin:22px 0 20px; border-radius:26px; padding:16px; position:relative; overflow:hidden;
+           background:linear-gradient(150deg, var(--magenta), #7A0637);
+           box-shadow:0 8px 0 rgba(90,4,42,.45), 0 18px 30px rgba(90,4,42,.3)}
+.hero-card:before{content:""; position:absolute; inset:0; background:radial-gradient(80% 60% at 15% 0%, rgba(255,255,255,.28), transparent 60%)}
+.hero-card .row{position:relative}
+.hero-card .eyebrow{position:relative; color:#FFD1E2; text-align:center; margin:16px 0 10px}
+.prize{position:relative; display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.95); border-radius:16px;
+       padding:9px 12px; font-size:12px; font-weight:700; color:var(--berry-700); box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.prize+.prize{margin-top:8px}
+.prize i{font-style:normal; font-size:18px}
+.prize b{margin-left:auto; font-family:var(--display); font-size:14px; color:var(--magenta)}
+.home-actions{margin-top:auto}
+
+/* ---------- 03 how to play ---------- */
+h2.title{font-family:var(--display); font-size:26px; margin:0; color:var(--berry-700); letter-spacing:.3px}
+.intro{font-size:12px; font-weight:600; color:#8C5A72; line-height:1.6; margin:6px 0 16px}
+.howrow{background:#fff; border-radius:20px; padding:14px; margin-bottom:12px; box-shadow:0 5px 0 rgba(59,6,32,.1)}
+.howrow .row{gap:6px}
+.howrow .tile{font-size:24px; border-radius:12px}
+.howrow p{margin:10px 0 0; font-size:12px; font-weight:600; color:#8C5A72}
+.howrow p b{font-family:var(--display); color:var(--magenta); font-size:14px}
+
+/* ---------- 04 game ---------- */
+.attempt{display:flex; justify-content:center; margin-bottom:12px; flex:none}
+.attempt .pill{padding:6px 16px; border-radius:99px; font-size:10px; font-weight:800; letter-spacing:1.4px; color:#B9829B; text-transform:uppercase}
+.attempt .pill b{font-family:var(--display); font-size:15px; color:var(--magenta); letter-spacing:0}
+.boardwrap{flex:1; min-height:0; margin-bottom:16px; padding:12px; border-radius:26px; position:relative;
+           display:flex; justify-content:center;
+           background:linear-gradient(#FFF8F2,#FFE6D6);
+           box-shadow:0 9px 0 rgba(0,0,0,.4), inset 0 0 0 3px rgba(193,15,94,.14), 0 20px 40px rgba(0,0,0,.45)}
+.grid{height:100%; max-width:100%; aspect-ratio:5/6; display:grid; grid-template-rows:repeat(6,1fr); gap:8px}
+.toast{position:absolute; top:-14px; left:50%; transform:translateX(-50%); z-index:5; white-space:nowrap;
+       background:#fff; color:var(--magenta); font-family:var(--display); font-weight:800; font-size:14px; letter-spacing:.3px;
+       padding:7px 16px; border-radius:99px; box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.kb{flex:none}
+.kr{display:flex; gap:5px; margin-bottom:7px; justify-content:center}
+.kr.pad{padding:0 16px}
+.key{flex:1; min-width:0; background:#fff; border:none; border-radius:10px; padding:12px 0 11px; cursor:pointer;
+     font-family:var(--display); font-weight:800; font-size:16px; color:var(--magenta);
+     box-shadow:0 3px 0 rgba(0,0,0,.35); transition:transform .06s, box-shadow .06s}
+.key:active{transform:translateY(3px); box-shadow:0 0 0 rgba(0,0,0,.35)}
+.key.wide{flex:1.6; font-size:12px; letter-spacing:.5px}
+.key.correct{background:linear-gradient(#C8ED7E, var(--lime)); color:#2C4A00; box-shadow:0 3px 0 #4E7511}
+.key.present{background:linear-gradient(#FFDD7A, var(--gold)); color:#5A3200; box-shadow:0 3px 0 #B87400}
+.key.absent{background:rgba(255,255,255,.14); color:rgba(255,255,255,.45); box-shadow:none}
+
+/* ---------- 05 result ---------- */
+.card{width:100%; border-radius:30px; padding:24px 18px 20px; text-align:center; position:relative;
+      background:linear-gradient(#FFFDFB,#FFE9F2);
+      box-shadow:0 12px 0 rgba(90,4,42,.5), inset 0 0 0 4px rgba(255,255,255,.9), 0 30px 60px rgba(0,0,0,.5)}
+.card h3{font-family:var(--display); font-size:34px; margin:0 0 2px; color:var(--magenta); letter-spacing:.5px; text-shadow:0 3px 0 rgba(193,15,94,.16)}
+.card .msg{font-size:12px; font-weight:600; color:#8C5A72; margin:0 0 16px}
+.card .row{gap:6px; margin-bottom:16px}
+.card .row .tile{font-size:26px}
+.prizebox{border-radius:20px; padding:12px; margin-bottom:14px; background:rgba(168,216,75,.2)}
+.prizebox.soft{background:rgba(193,15,94,.08)}
+.prizebox .t{font-family:var(--display); font-size:20px; font-weight:800; color:var(--berry-700); margin-top:2px; line-height:1.15}
+.prizebox .s{font-size:11px; font-weight:600; color:#8C5A72; margin-top:3px}
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px}
+.stats .pill{padding:8px 6px}
+.stats .v{font-size:22px}
+.confetti{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:55}
+.conf{position:absolute; top:0; width:9px; height:14px; border-radius:2px; animation:confFall linear forwards}
+@keyframes confFall{0%{transform:translateY(-30px) rotate(0); opacity:1}100%{transform:translateY(var(--fall,840px)) rotate(720deg); opacity:.9}}
+
+/* ---------- 06 reward ---------- */
+.ticket{width:100%; background:#fff; border-radius:24px; padding:22px 18px 18px; text-align:center;
+        border:3px dashed rgba(193,15,94,.3); box-shadow:0 10px 0 rgba(59,6,32,.15), 0 20px 40px rgba(59,6,32,.18)}
+.ticket .t{font-family:var(--display); font-size:24px; font-weight:800; color:var(--magenta); margin-top:4px; line-height:1.1}
+.qr{width:130px; height:130px; margin:16px auto 12px; border-radius:14px; padding:8px; background:#fff; box-shadow:inset 0 0 0 3px var(--berry-700)}
+.qr i{display:block; width:100%; height:100%; border-radius:4px;
+      background:repeating-conic-gradient(#3B0620 0 25%, #fff 0 50%) 0 0/20px 20px}
+.ccode{font-family:var(--display); font-size:28px; font-weight:800; color:var(--berry-700); letter-spacing:3px; line-height:1}
+.note{font-size:10px; font-weight:700; color:#B9829B; margin-top:6px}
+.secure{margin:12px auto 0; border-radius:99px; padding:7px 10px; background:rgba(168,216,75,.2); color:#5C7F15;
+        font-size:10px; font-weight:800; letter-spacing:.7px; text-transform:uppercase}
+.secure span{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--lime);
+             box-shadow:0 0 0 4px rgba(168,216,75,.2); margin-right:6px}
+.store{display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:20px; padding:12px 14px;
+       margin-top:auto; box-shadow:0 5px 0 rgba(59,6,32,.1)}
+.store b{font-family:var(--display); font-size:15px; color:var(--berry-700); display:block; line-height:1.1}
+.store small{font-size:10px; font-weight:700; color:#B9829B}
+.store span{color:var(--magenta); font-size:18px}
+.tiny{text-align:center; font-size:11px; font-weight:600; color:#8C5A72; margin:12px 0 16px}
+
+/* ---------- juice ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .tile.flip{animation:flip .45s ease both}
+  @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+  .shake{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s !important; transition-duration:.05s !important}}
+@media (max-height:700px){ .tile{font-size:24px} .key{padding:10px 0 9px} }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+// Prototype only. The real build scores on the server — see schema.sql.
+// Everything here lives in memory: refresh and you start over.
+
+const ANSWERS = ['MANGO','BERRY','SWIRL','PEACH','HONEY','MOCHI','CREAM','LEMON','GUAVA','FUDGE','CANDY','MELON','COCOA','SYRUP','WAFER'];
+const EXTRA = ['ABOUT','AFTER','BEACH','BREAD','CHAIR','CLOUD','DANCE','DREAM','EARTH','FLAME','GRAPE','GREEN','HAPPY','HOUSE','LIGHT','MUSIC','NIGHT','OCEAN','PARTY','PLANT','QUIET','RIVER','SHINE','SMILE','SNACK','SPOON','STORM','SUGAR','SWEET','TABLE','TASTE','TREAT','WATER','WHITE','YOUTH'];
+const VALID = new Set([...ANSWERS, ...EXTRA]);
+
+const answer = ANSWERS[new Date().getDate() % ANSWERS.length];
+const state = { screen:'splash', guesses:[], current:'', done:null, toast:'', shake:false, flip:-1 };
+const app = document.getElementById('app');
+const phone = document.getElementById('phone');
+const KEYS = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+const LOGO = cls => `<div class="logo ${cls || ''}" style="font-size:17px">Yogurtland<small>get real.</small></div>`;
+let lastScreen = null;
+
+function score(guess){
+  const marks = Array(5).fill('absent');
+  const pool = {};
+  for (let i = 0; i < 5; i++){
+    if (guess[i] === answer[i]) marks[i] = 'correct';
+    else pool[answer[i]] = (pool[answer[i]] || 0) + 1;
+  }
+  for (let i = 0; i < 5; i++){
+    if (marks[i] === 'correct') continue;
+    if (pool[guess[i]] > 0){ marks[i] = 'present'; pool[guess[i]]--; }
+  }
+  return marks;
+}
+
+function keyState(letter){
+  let best = '';
+  for (const g of state.guesses){
+    const marks = score(g);
+    for (let i = 0; i < 5; i++){
+      if (g[i] !== letter) continue;
+      if (marks[i] === 'correct') return 'correct';
+      if (marks[i] === 'present') best = 'present';
+      else if (!best) best = 'absent';
+    }
+  }
+  return best;
+}
+
+function topbar(left, right, logoCls){
+  const btn = b => b ? `<button class="back" data-act="${b.act}" aria-label="${b.label}">${b.icon}</button>` : '<span class="sp"></span>';
+  return `<div class="topbar">${btn(left)}${LOGO(logoCls)}${btn(right)}</div>`;
+}
+
+function tileRow(word, marks, opts = {}){
+  let html = `<div class="row${opts.sq ? ' sq' : ''}">`;
+  for (let i = 0; i < 5; i++){
+    let cls = '';
+    if (marks) cls = ` ${marks[i]}${opts.flip ? ' flip' : ''}`;
+    else if (opts.cursor && word[i]) cls = ' cursor';
+    html += `<div class="tile${cls}">${word[i] || ''}</div>`;
+  }
+  return html + '</div>';
+}
+
+function tierFor(tries){ return tries <= 3 ? 'One free topping' : '10% off your order'; }
+
+function screenHtml(s){
+  if (s === 'splash'){
+    return `<section class="screen s-splash" data-act="home">
+      <div class="sprinkles" id="sprinkles"></div>
+      <div class="logo" style="font-size:26px; position:relative; z-index:2">Yogurtland<small>get real.</small></div>
+      <h2 class="splash-title"><span class="a">DAILY</span><span class="b">WORD</span></h2>
+      <div class="swirl">
+        <svg viewBox="0 0 120 120" width="150" height="150" aria-hidden="true">
+          <ellipse cx="60" cy="104" rx="34" ry="9" fill="#C10F5E" opacity=".18"/>
+          <path d="M28 66h64l-7 34a8 8 0 0 1-8 7H43a8 8 0 0 1-8-7z" fill="#fff" stroke="#E9C9D8" stroke-width="2"/>
+          <path d="M60 12c-9 4-13 12-9 17-11 1-16 10-10 16-12 2-16 13-6 18 3 2 8 3 13 3h24c14 0 20-9 12-16 9-6 4-16-8-17 5-6 0-14-9-18-2-1-5-2-7-3z" fill="#FFFDFB" stroke="#EFD9E3" stroke-width="2"/>
+          <circle cx="44" cy="60" r="7" fill="#E02B45"/><circle cx="42" cy="57" r="2" fill="#fff" opacity=".6"/>
+          <circle cx="76" cy="58" r="6" fill="#4E3AA8"/><circle cx="74" cy="56" r="1.8" fill="#fff" opacity=".5"/>
+          <circle cx="60" cy="64" r="6.5" fill="#8CC63F"/>
+          <rect x="82" y="66" width="11" height="11" rx="3" fill="#FFC93C" transform="rotate(12 87 71)"/>
+          <circle cx="34" cy="70" r="5.5" fill="#7A4A2B"/>
+        </svg>
+      </div>
+      <div class="tapstart">TAP TO START</div>
+    </section>`;
+  }
+
+  if (s === 'home'){
+    return `<section class="screen">
+      ${topbar({act:'splash', icon:'☰', label:'Menu'}, null)}
+      <div class="scroll">
+        <h1 class="home-title"><span class="a">DAILY</span><span class="b">WORD</span></h1>
+        <div class="day"><span class="eyebrow">Day 24 · today</span></div>
+        <p class="sub">Guess the five-letter word in six tries</p>
+        <div class="hero-card">
+          ${tileRow('TODAY', ['correct','correct','correct','correct','correct'], {sq:true})}
+          <div class="eyebrow">Today's prizes</div>
+          <div class="prize"><i>🍦</i>Solve in 3<b>free topping</b></div>
+          <div class="prize"><i>🎟️</i>Solve in 4–6<b>10% off</b></div>
+        </div>
+        <div class="home-actions">
+          <button class="btn" data-act="play">PLAY</button>
+          <button class="btn white" data-act="howto">HOW TO PLAY</button>
+        </div>
+      </div>
+    </section>`;
+  }
+
+  if (s === 'howto'){
+    return `<section class="screen">
+      ${topbar({act:'home', icon:'←', label:'Back'}, null)}
+      <div class="scroll">
+        <h2 class="title">How to play</h2>
+        <p class="intro">Guess the word in six tries. After each guess, the tiles show how close you were.</p>
+        <div class="howrow">${tileRow('MANGO', ['correct','blank','blank','blank','blank'], {sq:true})}
+          <p><b>M</b> is in the word and in the right spot.</p></div>
+        <div class="howrow">${tileRow('BERRY', ['blank','present','blank','blank','blank'], {sq:true})}
+          <p><b>E</b> is in the word but in the wrong spot.</p></div>
+        <div class="howrow">${tileRow('SWIRL', ['blank','blank','absent','blank','blank'], {sq:true})}
+          <p><b>I</b> is not in the word at all.</p></div>
+        <button class="btn lime" data-act="play" style="margin-top:auto">START GAME</button>
+      </div>
+    </section>`;
+  }
+
+  if (s === 'game'){
+    let rows = '';
+    for (let i = 0; i < 6; i++){
+      if (i < state.guesses.length) rows += tileRow(state.guesses[i], score(state.guesses[i]), {flip: i === state.flip});
+      else if (i === state.guesses.length) rows += tileRow(state.current, null, {cursor:true});
+      else rows += tileRow('', null);
+    }
+    const kb = KEYS.map((line, i) => {
+      const keys = line.split('').map(c => `<button class="key ${keyState(c)}" data-key="${c}">${c}</button>`).join('');
+      if (i === 1) return `<div class="kr pad">${keys}</div>`;
+      if (i === 2) return `<div class="kr"><button class="key wide" data-key="ENTER">ENTER</button>${keys}<button class="key wide" data-key="DEL" aria-label="Delete">⌫</button></div>`;
+      return `<div class="kr">${keys}</div>`;
+    }).join('');
+    return `<section class="screen dark">
+      ${topbar({act:'home', icon:'☰', label:'Menu'}, {act:'howto', icon:'?', label:'How to play'}, 'lt')}
+      <div class="attempt"><span class="pill">Attempt <b>${Math.min(state.guesses.length + 1, 6)}</b> of 6</span></div>
+      <div class="boardwrap">
+        ${state.toast ? `<div class="toast" role="status">${state.toast}</div>` : ''}
+        <div class="grid ${state.shake ? 'shake' : ''}">${rows}</div>
+      </div>
+      <div class="kb">${kb}</div>
+    </section>`;
+  }
+
+  if (s === 'result'){
+    const won = state.done === 'win';
+    const tries = state.guesses.length;
+    return `<section class="screen dark" style="justify-content:center">
+      <div style="position:absolute; top:${'48px'}; left:18px; right:18px">${topbar({act:'home', icon:'✕', label:'Close'}, null, 'lt')}</div>
+      <div class="card">
+        <h3>${won ? 'Nice one!' : 'So close!'}</h3>
+        <p class="msg">${won ? `Solved in ${tries} ${tries === 1 ? 'try' : 'tries'}` : "Today's word was"}</p>
+        ${tileRow(answer, Array(5).fill(won ? 'correct' : 'absent'), {sq:true})}
+        ${won ? `<div class="prizebox">
+            <div class="eyebrow" style="color:#5C7F15">You won</div>
+            <div class="t">${tierFor(tries)}</div>
+            <div class="s">Goes straight into your Real Rewards account</div>
+          </div>`
+        : `<div class="prizebox soft">
+            <div class="eyebrow">Comeback bonus</div>
+            <div class="t">Win tomorrow and<br>your prize levels up</div>
+          </div>`}
+        <div class="stats">
+          <div class="pill"><div class="v">12</div><div class="k">Played</div></div>
+          <div class="pill"><div class="v">${won ? 5 : 0}</div><div class="k">Streak</div></div>
+          <div class="pill"><div class="v">${won ? '82%' : '75%'}</div><div class="k">Win rate</div></div>
+        </div>
+        <button class="btn ${won ? 'lime' : ''}" data-act="${won ? 'reward' : 'home'}">${won ? 'GET MY REWARD' : 'REMIND ME TOMORROW'}</button>
+        <button class="link" data-act="home">Share result</button>
+      </div>
+    </section>`;
+  }
+
+  if (s === 'reward'){
+    return `<section class="screen">
+      ${topbar({act:'result', icon:'←', label:'Back'}, null)}
+      <div class="scroll">
+        <div class="ticket">
+          <div class="eyebrow">Your reward code</div>
+          <div class="t">${tierFor(state.guesses.length)}</div>
+          <div class="qr"><i></i></div>
+          <div class="ccode">YL7K2M9</div>
+          <div class="note">Valid through Sep 5 · One use</div>
+          <div class="secure"><span></span>Secure reward</div>
+        </div>
+        <button class="btn" style="margin-top:22px">ADD TO REAL REWARDS</button>
+        <p class="tiny">Or show this code at the register.</p>
+        <div class="store">
+          <div><b>Irvine Marketplace</b><small>0.4 mi · Open until 10 PM</small></div>
+          <span>➤</span>
+        </div>
+        <button class="link" data-act="home">Back to game</button>
+      </div>
+    </section>`;
+  }
+  return '';
+}
+
+function render(){
+  const s = state.screen;
+  const html = screenHtml(s);
+  app.innerHTML = html;
+  if (s !== lastScreen){
+    app.firstElementChild.classList.add('enter');
+    lastScreen = s;
+    if (s === 'splash') sprinkle();
+    if (s === 'result' && state.done === 'win') confetti();
+  }
+}
+
+function fitPhone(){
+  phone.style.transform = window.innerWidth > 430
+    ? `scale(${Math.min(1, (window.innerHeight - 36) / 800)})` : '';
+}
+
+function sprinkle(){
+  const box = document.getElementById('sprinkles');
+  if (!box) return;
+  const colors = ['#C10F5E','#A8D84B','#FFC93C','#4E3AA8','#E02B45','#7A4A2B'];
+  box.style.setProperty('--fall', (phone.clientHeight + 60) + 'px');
+  for (let i = 0; i < 22; i++){
+    const d = document.createElement('i');
+    d.className = 'sprinkle';
+    d.style.cssText = `left:${Math.random()*100}%; width:${4+Math.random()*3}px; height:${11+Math.random()*7}px;
+      background:${colors[i % colors.length]}; animation-duration:${5+Math.random()*5}s; animation-delay:${-Math.random()*8}s`;
+    box.appendChild(d);
+  }
+}
+
+function confetti(){
+  const box = document.createElement('div');
+  box.className = 'confetti';
+  box.style.setProperty('--fall', (phone.clientHeight + 40) + 'px');
+  const colors = ['#C10F5E','#A8D84B','#FFC93C','#FF8FB8','#fff'];
+  for (let i = 0; i < 44; i++){
+    const c = document.createElement('i');
+    c.className = 'conf';
+    c.style.cssText = `left:${Math.random()*100}%; background:${colors[i % colors.length]};
+      animation-duration:${1.8+Math.random()*1.6}s; animation-delay:${Math.random()*.5}s`;
+    box.appendChild(c);
+  }
+  app.appendChild(box);
+  setTimeout(() => box.remove(), 4200);
+}
+
+function submit(){
+  const guess = state.current;
+  if (guess.length < 5){ flash('Not enough letters'); return; }
+  if (!VALID.has(guess)){ flash('Not in word list'); return; }
+
+  state.guesses.push(guess);
+  state.current = '';
+  state.toast = '';
+  state.flip = state.guesses.length - 1;
+
+  if (guess === answer) state.done = 'win';
+  else if (state.guesses.length === 6) state.done = 'loss';
+
+  render();
+  state.flip = -1; // flip once; later renders (typing) must not replay it
+  if (state.done) setTimeout(() => { state.screen = 'result'; render(); }, 900);
+}
+
+function flash(msg){
+  state.toast = msg;
+  state.shake = true;
+  render();
+  setTimeout(() => { state.shake = false; render(); }, 400);
+  setTimeout(() => { if (state.toast === msg){ state.toast = ''; render(); } }, 2000);
+}
+
+function press(key){
+  if (state.done) return;
+  if (key === 'ENTER') return submit();
+  if (key === 'DEL'){ state.current = state.current.slice(0, -1); return render(); }
+  if (state.current.length < 5){ state.current += key; render(); }
+}
+
+app.addEventListener('click', e => {
+  const key = e.target.closest('[data-key]');
+  if (key) return press(key.dataset.key);
+  const act = e.target.closest('[data-act]');
+  if (!act || !act.dataset.act) return;
+  const to = act.dataset.act;
+  if (to === 'play'){
+    state.screen = 'game'; state.guesses = []; state.current = ''; state.done = null; state.toast = ''; state.flip = -1;
+  } else state.screen = to;
+  render();
+});
+
+document.addEventListener('keydown', e => {
+  if (state.screen !== 'game' || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'Enter') press('ENTER');
+  else if (e.key === 'Backspace') press('DEL');
+  else if (/^[a-zA-Z]$/.test(e.key)) press(e.key.toUpperCase());
+});
+
+window.addEventListener('resize', fitPhone);
+fitPhone();
+render();
+</script>
+</body>
+</html>
