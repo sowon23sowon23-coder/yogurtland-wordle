@@ -44,7 +44,45 @@ type SessionRow = { plays: number; wins: number; streak: number };
 const GAME_COLUMNS =
   'id, session_id, word_id, play_date, guesses, attempts, result, finished_at';
 
+// TEMP: while there is no word schedule yet, every day's answer is this word.
+// Set to null to go back to reading the day's `live` word from the `words` table.
+const FIXED_ANSWER: string | null = 'MANGO';
+
+// `words` allows one row per word and one per play_date, so a fixed answer can't
+// get a row per day. One row serves every day; it uses a sentinel date and
+// `closed` status so it never collides with (or gets picked up by) a real schedule.
+// Note: if MANGO is later scheduled for a real date, this row must be removed first.
+const FIXED_WORD_DATE = '1970-01-01';
+
+async function fetchFixedWord(word: string): Promise<WordRow> {
+  const supabase = getSupabaseAdmin();
+  const find = async () => {
+    const { data, error } = await supabase
+      .from('words')
+      .select('id, word')
+      .eq('word', word)
+      .maybeSingle();
+    if (error) throw error;
+    return data as WordRow | null;
+  };
+
+  const existing = await find();
+  if (existing) return existing;
+
+  const { error } = await supabase
+    .from('words')
+    .insert({ word, play_date: FIXED_WORD_DATE, status: 'closed' });
+  // 23505: a concurrent request inserted it first — fall through and re-read.
+  if (error && error.code !== '23505') throw error;
+
+  const created = await find();
+  if (!created) throw new Error(`Could not create the fixed answer row for ${word}.`);
+  return created;
+}
+
 async function fetchLiveWordForToday(playDate: string): Promise<WordRow | null> {
+  if (FIXED_ANSWER) return fetchFixedWord(FIXED_ANSWER);
+
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from('words')
