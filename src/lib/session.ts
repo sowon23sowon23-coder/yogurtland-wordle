@@ -1,6 +1,7 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { getSupabaseAdmin } from './supabase-admin';
+import { isDemoMode } from './demo-game';
 
 // Keep in sync with middleware.ts.
 export const SESSION_COOKIE = 'yl_session';
@@ -29,6 +30,7 @@ export async function ensureSession(sessionId: string): Promise<void> {
 export async function requireSession(): Promise<string | null> {
   const sessionId = readSessionId();
   if (!sessionId) return null;
-  await ensureSession(sessionId);
+  // Demo mode has no database, so there is no sessions row to create.
+  if (!isDemoMode()) await ensureSession(sessionId);
   return sessionId;
 }

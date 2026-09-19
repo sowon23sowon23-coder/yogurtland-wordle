@@ -11,6 +11,7 @@ type View =
   | { kind: 'loading' }
   | { kind: 'assigned'; code: string; expiresAt: string | null; tier: RewardTier }
   | { kind: 'sold_out' }
+  | { kind: 'demo' }
   | { kind: 'error' };
 
 function formatDate(iso: string): string {
@@ -33,6 +34,8 @@ export default function RewardPage() {
       setView({ kind: 'assigned', code: r.code, expiresAt: r.expiresAt, tier: r.tier });
     } else if (r.status === 'sold_out') {
       setView({ kind: 'sold_out' });
+    } else if (r.status === 'demo') {
+      setView({ kind: 'demo' });
     } else if (r.reason === 'not_a_winner' || r.reason === 'no_game_today') {
       router.replace('/');
     } else {
@@ -94,6 +97,19 @@ export default function RewardPage() {
           <div className="state">
             <b>Today&apos;s rewards are all gone</b>
             <p>Every reward has been claimed for now. Play again tomorrow for another chance!</p>
+            <Link className="btn" href="/">
+              BACK HOME
+            </Link>
+          </div>
+        )}
+
+        {view.kind === 'demo' && (
+          <div className="state">
+            <b>You solved it!</b>
+            <p>
+              This is a preview version, so reward codes aren&apos;t being handed out yet. They&apos;ll
+              be available once the game launches.
+            </p>
             <Link className="btn" href="/">
               BACK HOME
             </Link>

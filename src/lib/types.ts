@@ -53,4 +53,6 @@ export type GuessResponse =
 export type RewardResponse =
   | { status: 'assigned'; code: string; expiresAt: string | null; tier: RewardTier }
   | { status: 'sold_out' }
+  /** No database is connected yet, so no reward codes exist to hand out. */
+  | { status: 'demo' }
   | { status: 'error'; reason: 'not_a_winner' | 'no_session' | 'no_game_today' };

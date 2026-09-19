@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from './supabase-admin';
 import { scoreGuess } from './scoring';
 import { isAllowedGuess } from './wordlist';
 import { decideRewardTier } from './reward-tier';
+import { getDemoToday, isDemoMode, submitDemoGuess } from './demo-game';
 import { MAX_ATTEMPTS } from './types';
 import type {
   GameStatus,
@@ -47,6 +48,9 @@ const GAME_COLUMNS =
 // TEMP: while there is no word schedule yet, every day's answer is this word.
 // Set to null to go back to reading the day's `live` word from the `words` table.
 const FIXED_ANSWER: string | null = 'MANGO';
+
+/** The answer used in demo mode (no database), which has no word table to read. */
+export const DEMO_ANSWER: string = FIXED_ANSWER ?? 'MANGO';
 
 // `words` allows one row per word and one per play_date, so a fixed answer can't
 // get a row per day. One row serves every day; it uses a sentinel date and
@@ -146,6 +150,8 @@ function toStatus(result: GameRow['result']): GameStatus {
  * answer unless the game has already finished for this session. */
 export async function getTodayState(sessionId: string): Promise<TodayResponse> {
   const playDate = getPlayDate();
+  if (isDemoMode()) return getDemoToday(playDate, DEMO_ANSWER);
+
   const [game, stats] = await Promise.all([
     fetchGame(sessionId, playDate),
     fetchSessionStats(sessionId),
@@ -213,6 +219,8 @@ export async function submitGuess(
   }
 
   const playDate = getPlayDate();
+  if (isDemoMode()) return submitDemoGuess(guess, playDate, DEMO_ANSWER);
+
   const word = await fetchLiveWordForToday(playDate);
   if (!word) {
     return { ok: false, reason: 'no_word_today' };

@@ -1,6 +1,7 @@
 import 'server-only';
 import { getSupabaseAdmin } from './supabase-admin';
-import { getTodayGameForReward } from './game';
+import { DEMO_ANSWER, getPlayDate, getTodayGameForReward } from './game';
+import { getDemoResult, isDemoMode } from './demo-game';
 import { decideRewardTier } from './reward-tier';
 import type { RewardResponse, RewardTier } from './types';
 
@@ -22,6 +23,14 @@ async function claimRewardCode(
 }
 
 export async function claimRewardForSession(sessionId: string): Promise<RewardResponse> {
+  if (isDemoMode()) {
+    // No reward pool exists without the database, so never invent a code.
+    const status = getDemoResult(getPlayDate(), DEMO_ANSWER);
+    if (status === 'not_started') return { status: 'error', reason: 'no_game_today' };
+    if (status !== 'won') return { status: 'error', reason: 'not_a_winner' };
+    return { status: 'demo' };
+  }
+
   const game = await getTodayGameForReward(sessionId);
   if (!game) return { status: 'error', reason: 'no_game_today' };
   if (game.result !== 'win') return { status: 'error', reason: 'not_a_winner' };
